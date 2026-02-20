@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📋 Task Manager</h1>
+            <p>Docker Capstone Project - Week 1</p>
+        </header>
+
+        <div class="add-task">
+            <input type="text" id="taskInput" placeholder="Enter a new task...">
+            <button onclick="addTask()">Add Task</button>
+        </div>
+
+        <div class="stats">
+            <span>Total: <strong id="totalTasks">0</strong></span>
+            <span>Completed: <strong id="completedTasks">0</strong></span>
+            <span>Pending: <strong id="pendingTasks">0</strong></span>
+        </div>
+
+        <div id="taskList" class="task-list">
+            <!-- Tasks will be loaded here -->
+        </div>
+
+        <div class="health-status">
+            <span id="healthStatus">Checking backend...</span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

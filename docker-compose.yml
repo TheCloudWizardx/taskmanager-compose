@@ -1,0 +1,52 @@
+services:
+
+  database:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes: 
+      - db-data:/var/lib/postgresql/data 
+    networks: 
+      - app-network
+    healthcheck: 
+      test: ["CMD-SHELL", "pg_isready -U taskuser -d taskdb"] 
+      interval: 30s 
+      timeout: 5s 
+      retries: 10
+  backend:
+    build: ./backend
+    environment:
+
+      DB_HOST: database
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASS: ${POSTGRES_PASSWORD}
+      APP_ENV: ${APP_ENV}
+    depends_on: 
+      database: 
+        condition: service_healthy 
+    networks: 
+      - app-network 
+    healthcheck: 
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:5000/api/health')\""] 
+      interval: 30s 
+      timeout: 10s 
+      retries: 3
+
+  frontend:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+
+networks:
+  app-network:
